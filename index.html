@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script> 
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind = {
+      config:{
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563EB',
+            secondary: '#60A5FA',
+            accent: '#10B981',
+            neutralBg: '#F1FAFC',
+            neutralText: '#1E293B',
+            muted: '#94A3B8',
+            card: '#FFFFFF',
+            mutedBg: '#F9FAFB',
+            genderBg: '#C4E2FF'
+          },
+          fontFamily: {
+            customFont: ['Cairo', 'sans-serif'],
+          }
+        }
+      }
+      }
+    }
+  </script>
+
+  
+
+  <title>Smart Body Calculator</title>
+</head>
+
+<body class="bg-neutralBg text-neutralText">
+
+  <!-- App Wrapper (important for plugin safety) -->
+  <div id="smart-body-app" class="max-w-4xl mx-auto px-4 py-8 space-y-6 font-customFont">
+
+ 
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <!-- INPUT SECTION -->
+      <section class="bg-card rounded-xl shadow-sm p-8">
+        <h1 class="text-2xl  text-center font-bold text-primary">
+          أدخل بياناتك
+        </h1>
+         <div id="gender-select" class="flex justify-center mt-4">
+            <div class=" flex  gap-4 bg-genderBg  rounded-full cursor-pointer">
+              <p id="male" class="px-4 py-2">ذكر</p>
+              <p id="female" class="active m-0 bg-primary text-white px-4 py-2 rounded-full ">أنثى</p>
+            </div>
+          </div>
+        <form >
+          <div id="awh" class="grid grid-cols-3 gap-4 mt-4">
+              <div id="ageContainer" class="bg-card shadow-sm py-4 px-2 rounded-lg">
+                <label for="age" class="flex justify-between ">
+                
+                    <img src="./assets/ageicon.svg" alt="user's age"> 
+                    <span>العمر</span>
+                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                </label>
+                <input type="number" id="age" name="age" class="mt-3 block w-full rounded-md border-b border-gray-300 text-center focus:outline-none focus:border-primary focus:ring-primary text-xl px-2" placeholder="N/A"/>
+              </div>
+              <div id="weightContainer" class="bg-card shadow-sm py-4 px-2 rounded-lg">
+                <label for="weight" class="flex justify-between ">
+                
+                    <img src="./assets/weighticon.svg" alt="user's weight"> 
+                    <span> وزن </span>
+                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                </label>
+                <div class="flex justify-center items-end gap-2 mt-2">
+                  <span class="text-primary">Kg</span>
+                  <input type="number" id="weight" name="weight" class="mt-1 block w-full rounded-md text-center  border-b border-gray-300 focus:border-primary focus:outline-none focus:ring-primary text-xl px-2" placeholder="N/A"/>
+
+                </div>
+                 
+                
+              </div>
+              <div id="heightContainer" class="bg-card shadow-sm py-4 px-2 rounded-lg">
+                <label for="height" class="flex justify-between ">
+                
+                    <img src="./assets/heighticon.svg" alt="user's height"> 
+                    <span> الارتفاع </span>
+                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                </label>
+                <div class="flex justify-center items-end gap-2 mt-2">
+                  <span class="text-primary">cm</span>
+                  <input type="number" id="height" name="height" class="mt-1 block w-full rounded-md text-xl text-semibold text-center border-b border-gray-300 focus:border-primary focus:outline-none focus:ring-primary px-2" placeholder="N/A"/>
+
+                </div>
+             </div>
+          </div>
+          <div id="activity-level-container" class="mt-4">
+            <label for="activity-level" class="flex justify-between mt-4 w-1/2">
+              <img src="./assets/activity-Level.svg" alt="user's activity level"> 
+              <span> مستوى النشاط </span>
+              <img src="./assets/info.svg" alt="info" cursor="pointer">
+            </label>
+            <select id="activity-level" class="mt-4 block w-full bg-card rounded-2xl border border-gray-300  py-2 px-3 pl-3 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm">
+              <option value="" disabled selected>اختر مستوى النشاط</option>
+
+              <option value="sedentary">
+                غير نشط (بدون تمارين – عمل مكتبي)
+              </option>
+
+              <option value="lightly_active">
+                نشاط خفيف (تمارين 1–3 مرات في الأسبوع)
+              </option>
+
+              <option value="moderately_active">
+                نشاط متوسط (تمارين 3–5 مرات في الأسبوع)
+              </option>
+
+              <option value="very_active">
+                نشاط عالي (تمارين 6–7 مرات في الأسبوع)
+              </option>
+
+              <option value="extra_active">
+                نشاط عالي جداً (عمل بدني شاق أو رياضي محترف)
+              </option>
+
+            </select>
+          </div>
+          <div id="status-container" class="mt-4">
+            <label for="status" class="flex justify-between mt-4 w-1/2">
+               
+              <span> الحالة </span>
+              <img src="./assets/info.svg" alt="info" cursor="pointer">
+            </label>
+            <select id="status" class="mt-4 block w-full bg-card rounded-2xl border border-gray-300  py-2 px-3 pl-3 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm">
+              <option value="none" > لا شيء </option>
+              <option value="Pregnant"> حامل </option>
+              <option value="breastfeeding"> مرضعة </option>
+              
+            </select>
+          </div>
+          
+          <div id="advanced-measurement-container" class="mt-4">
+            <label class="inline-flex items-center gap-4 cursor-pointer">
+              <input type="checkbox" class="sr-only peer">
+
+              <div
+                class="relative w-9 h-5 rounded-full bg-gray-300
+                      peer-checked:bg-blue-600
+                      after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                      after:h-4 after:w-4 after:rounded-full after:bg-white
+                      after:transition-transform
+                      peer-checked:after:translate-x-4">
+              </div>
+
+              <span class=" font-medium ">
+                قياسات الجسم المتقدمة (اختياري)
+              </span>
+              <img src="./assets/info.svg" alt="info">
+            </label>
+            <div id="advanced-measurements" class="mt-2 grid grid-cols-3 gap-4">
+              <div id="neck-container" class="" >
+                <label for="neck" class="flex justify-between mt-4 w-full">
+                
+                    <span> رقبة </span>
+                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                </label>
+                <div class="flex justify-center items-end gap-2 mt-1">
+                  <span class="text-primary">cm</span>
+                  <input type="number" id="neck" name="neck" class="mt-1 block w-full rounded-md text-semibold text-center border border-grey-300 border-2 focus:outline-none focus:border-primary focus:ring-primary p-2" placeholder="N/A"/>
+
+                </div>
+              </div>
+              <div id="hip-container">
+                <label for="hip" class="flex justify-between mt-4 w-full">
+                
+                    <span> ورك </span>
+                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                </label>
+                <div class="flex justify-center items-end gap-2 mt-1">
+                  <span class="text-primary">cm</span>
+                  <input type="number" id="hip" name="hip" class="mt-1 block w-full rounded-md text-semibold text-center border border-grey-300 border-2  focus:outline-none focus:border-primary focus:ring-primary p-2" placeholder="N/A"/>
+
+                </div>
+              </div>
+              <div id="waist-container">
+                <label for="waist" class="flex justify-between mt-4 w-full">
+                
+                    <span> خصر </span>
+                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                </label>
+                <div class="flex justify-center items-end gap-2 mt-1">
+                  <span class="text-primary">cm</span>
+                  <input type="number" id="waist" name="waist" class="mt-1 block w-full rounded-md  text-semibold text-center border border-grey-300 border-2  focus:outline-none focus:border-primary focus:ring-primary p-2" placeholder="N/A"/>
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-4 mt-6 flex-col md:flex-row">
+            <button
+              type="button" id="calculate-btn" onclick="calculateResults()"
+              class="w-full md:w-1/2 bg-primary text-white py-2 rounded-xl
+                    hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
+              احسب النتائج
+            </button>
+
+            <button
+              id="reset"
+              type="button"
+              class="w-full md:w-1/2 border border-primary py-2 rounded-xl
+                    box-border hover:bg-genderBg">
+              إعادة الحساب
+            </button>
+          </div>
+        </form> 
+      </section>
+
+       <!-- RESULTS SECTION -->
+      <section class="bg-card rounded-xl shadow-sm py-8 px-6">
+        <h2 class="text-2xl text-center font-bold text-primary">نتائجك</h2>
+        <p id="date" class="font-semibold  text-center">
+          6th Dec. 2025
+        </p>
+        <!-- Results go here -->
+        <div id="Results" class="bg-mutedBg rounded-xl px-4 py-6 mt-4 space-y-6">
+          <div id="ideal-weight-range" class="flex justify-between items-center">
+            <div id="iwr-label" class="flex gap-2 items-center"> 
+              <span>  <span class="text-primary">kg </span>نطاق الوزن المثالي</span>
+              <img src="./assets/iwricon.svg" class="w-6" alt="iwr icon">
+            </div>
+            <p id="iwr-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          <div id="muscle-mass-estimate" class="flex items-center justify-between">
+            <div id="mme-label" class="flex items-center gap-2">
+              
+              <span class="w-full"> <span class="text-primary">kg</span> تقدير كتل العضلات </span>
+              <img src="./assets/mmeicon.svg" class="w-6" alt="mme icon">
+            </div>
+            <p id="mme-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          <div id="bmi" class="flex justify-between items-center">
+            <div id="bmi-label" class="flex items-center gap-1">
+              <span> مؤشر كتلة الجسم (BMI) </span>
+              <img src="./assets/Bmiicon.svg" class="w-6" alt="bmi icon">
+            </div>
+            <p id="bmi-value" class="text-xl text-semibold">N/A</p>
+            <p id="bmi-vtowords" class="text-primary">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          
+          <div id="fat-choice">
+            <div id="basicfc" class="  flex justify-between items-center">
+            <div id="basicfc-label" class="flex items-center gap-2">
+              
+              <span><span class="text-primary text-xl">%</span> دهون الجسم </span>
+              <img src="./assets/basicfaticon.svg" class="w-6" alt="bfc icon">
+            </div>
+            <p id="basic-fc-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+            </div>
+            <div id="advancedfc" class=" hidden flex justify-between items-center">
+            <div id="advancedfc-label" class="flex items-center gap-2">
+              
+              <span> <span class="text-primary text-xl">%</span> دهون الجسم المتقدمة  </span>
+              <img src="./assets/advancedfaticon.svg" class="w-6" alt="afc icon">
+            </div>
+            <p id="advanced-fc-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <!-- DAILY NUTRITION -->
+      <div class="bg-card rounded-xl shadow-sm py-8 px-6">
+        <h2 class="text-2xl text-center font-semibold text-primary"> الهدف اليومي للتغذية</h2>
+        <!-- Nutrition card -->
+         <div id="Daily-nutrition" class="bg-mutedBg rounded-xl px-4 py-6 mt-4 space-y-6">
+          <div id="carbs" class="flex justify-between items-center">
+            <div id="carbs-label" class="flex gap-2 items-center"> 
+              <span>  <span class="text-primary">g/day </span> الكربوهيدرات </span>
+              <img src="./assets/carbsicon.svg" class="w-6" alt="carbs icon">
+            </div>
+            <p id="carbs-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          <div id="protein" class="flex items-center justify-between">
+            <div id="protein-label" class="flex items-center gap-2">
+              
+              <span class="w-full"> <span class="text-primary">g/day</span> بروتين </span>
+              <img src="./assets/proteinicon.svg" class="w-6" alt="mme icon">
+            </div>
+            <p id="protein-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          <div id="fat" class=" flex justify-between items-center">
+            <div id="fat-label" class="flex items-center gap-2">
+              
+              <span><span class="text-primary">g/day</span> دهون </span>
+              <img src="./assets/faticon.svg" class="w-6" alt="fat icon">
+            </div>
+            <p id="fat-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          <div id="water" class="flex justify-between items-center">
+            <div id="water-label" class="flex items-center gap-2">
+              <div class="flex items-center gap-1 text-sm text-accent">
+                <p id="water-cups"> <span>cups</span> N/A </p>
+                <img src="./assets/doticon.svg" class="w-2" alt="dot icon">
+              </div>
+               <p> ماء الجسم  </p>
+              <img src="./assets/watericon.svg" class="w-6" alt="water icon">
+            </div>
+            <p id="water-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+          <div id="calories" class=" flex justify-between items-center">
+            <div id="calories-label" class="flex items-center ">
+              
+              <span><span class="text-primary">kcal/day</span> السعرات الحرارية اليومية</span>
+              <img src="./assets/caloriesicon.svg" class="w-6" alt="calories icon">
+            </div>
+            <p id="calories-value" class="text-xl text-semibold">N/A</p>
+            <img src="./assets/info.svg" alt="info">
+          </div>
+        </div>
+      </div>
+
+      <!-- AI INSIGHTS -->
+      <div class="bg-card rounded-xl shadow-sm p-8">
+        <h2 class="font-semibold text-primary text-2xl text-center"> رؤى ذكية </h2>
+        <!-- AI content -->
+        <div id="ai-summary" class="">
+          <div id="summary-label">
+            <label for="summary" class="flex justify-between mt-4 w-1/3">
+               <img src="./assets/aisummaryicon.svg" alt="ai-summary icon" cursor="pointer">
+              <span> ملخص </span>
+            </label>
+            <textarea type="text" id="summary" class="w-full h-36 rounded-xl border border-gray-300 mt-2 mb-1" disabled></textarea>
+            <p class="text-xs text-gray-500">التفسير والتفسير الصحي</p>
+          </div>
+        </div>
+        <div id="ai-meal-plan">
+          <div class="flex gap-4 mt-6 flex-col md:flex-row">
+              <button
+                type="button"
+                onclick="generateMealPlan()"
+                class="w-full md:w-1/2 bg-primary text-white py-2 rounded-xl
+                      hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
+                إنشاء خطة طعام ذكية
+              </button>
+
+              <button
+                id="cancel-meal-plan"
+                type="button"
+                class="hidden w-full md:w-1/2 border border-primary py-2 rounded-xl
+                      box-border hover:bg-genderBg">
+                تعطيل
+              </button>
+          </div>
+          <div id="mealinput">
+            <div id="mealtypeselect">
+              <label for="meal-type" class="flex justify-between mt-4 w-1/2">
+                <img src="./assets/mealtypeicon.svg" alt="meal type icon">
+                <span> نوع الوجبة </span>
+                <img src="./assets/info.svg" alt="info" cursor="pointer">
+              </label>
+              <select id="meal-type" class="mt-4 block w-full bg-card rounded-2xl border border-gray-300  py-2 px-3 pl-3 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm" disabled>
+                  <option value="" disabled selected>اختر نوع الوجبة</option>
+
+                  <option value="balanced">نظام غذائي متوازن</option>
+                  <option value="high_protein">نظام عالي البروتين</option>
+                  <option value="low_carb">نظام منخفض الكربوهيدرات</option>
+                  <option value="keto">نظام الكيتو الغذائي</option>
+                  <option value="intermittent_fasting">الصيام المتقطع</option>
+                  <option value="mediterranean">النظام الغذائي المتوسطي</option>
+                  <option value="vegetarian">نظام غذائي نباتي</option>
+              </select>
+            </div>
+            <div>
+              <label for="meal-plan" class="flex justify-between mt-4 w-1/3">
+                <img src="./assets/mealplanicon.svg" alt="meal plan icon">
+                <span> خطة الوجبات </span>
+              
+             </label>
+              <textarea type="text" class="w-full h-36 rounded-xl border border-gray-300 mt-2 mb-1" disabled></textarea>
+            </div>
+             
+          </div>
+          <div class="flex gap-4 mt-6 flex-row">
+              <button
+                type="button"
+                onclick="printResults()"
+                class=" flex gap-2 mx-auto bg-primary text-white py-2 px-6 rounded-xl
+                      hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <img src="./assets/pdficon.svg" class="w-6" alt="">
+                      <p>تحميل PDF</p>  
+              </button>
+
+              <button
+                id="whatsapp"
+                type="button"
+                onclick="shareWhatsApp()"
+                class="  flex gap-2 mx-auto  border border-accent text-accent py-2 rounded-xl px-6
+                      box-border hover:bg-genderBg">
+                     <img src="./assets/whatsappicon.png" class="w-6" alt="">
+                      <p> واتساب </p>
+              </button>
+          </div>
+        </div>
+    </div>
+  </div>
+  <script src="./index.js"></script>
+  <script src="./calculation.js"></script>
+  <script src="./ai-insight.js"></script>
+
+</body>
+</html>
