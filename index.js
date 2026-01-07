@@ -60,6 +60,8 @@ function initUIControls() {
   const createMealBtn = aiSection.querySelector(
     "button:not(#cancel-meal-plan)"
   );
+  const emailContainer = document.getElementById("email-container");
+  const mealTypeSelect = document.getElementById("meal-type");
   const cancelMealBtn = aiSection.querySelector("#cancel-meal-plan");
   const mealInputSection = document.getElementById("mealinput");
 
@@ -67,12 +69,14 @@ function initUIControls() {
 
   createMealBtn.addEventListener("click", () => {
     mealInputSection.classList.remove("hidden");
-
+    emailContainer.classList.remove("hidden");
     createMealBtn.disabled = true;
+    mealTypeSelect.disabled = true;
     createMealBtn.classList.add("opacity-50", "cursor-not-allowed");
 
     cancelMealBtn.classList.remove("hidden");
   });
+
 
   cancelMealBtn.addEventListener("click", () => {
     // Only close AI meal UI

@@ -15,14 +15,57 @@ function generateSummary() {
   document.getElementById("summary").value = summary.trim();
 }
 
-function generateMealPlan() {
-  const mealType = document.getElementById("meal-type").value;
-  const data = window.smartBodyData;
-
-  if (!mealType || !data) {
-    alert("يرجى اختيار نوع الوجبة وحساب النتائج أولاً");
+async function generateMealPlan() {
+  if (!window.smartBodyData) {
+    alert("")
     return;
   }
+
+  const mealType = document.getElementById("meal-type").value;
+  const email = document.getElementById("user-email").value;
+  const data = window.smartBodyData;
+  
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert("يرجى إدخال بريد إلكتروني صحيح");
+    return;
+  }
+
+
+
+  if (!mealType || !data) {
+    alert("يرجى اختيار نوع الوجبة");
+    return;
+  }
+
+  // 🔹 Save to Supabase
+  const { error } = await supabase.from("meal_plan_requests").insert([
+    {
+      email,
+      meal_type: mealType,
+      gender: data.gender,
+      age: data.age,
+      bmi: data.bmi,
+      calories: data.calories,
+      protein: data.protein,
+      carbs: data.carbs,
+      fat: data.fat
+    }
+  ]);
+
+  if (error) {
+    alert("حدث خطأ أثناء حفظ البيانات");
+    console.error(error);
+    return;
+  }
+
+  // 🔹 Generate meal plan (temporary static logic)
+  generateLocalMealPlan(mealType);
+}
+
+function generateLocalMealPlan() {
+  
 
   let plan = "";
 
@@ -91,14 +134,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!mealTypeSelect) return;
 
-  mealTypeSelect.addEventListener("change", () => {
-    // Only generate if results already exist
-    if (!window.smartBodyData) {
-      alert("يرجى حساب النتائج أولاً");
-      mealTypeSelect.value = "";
-      return;
-    }
-
-    generateMealPlan();
-  });
 });
