@@ -223,19 +223,9 @@ function calculateResults() {
   /* === Nutrition === */
   const protein = weight * NUTRITION.PROTEIN_PER_KG;
   const fat = weight * NUTRITION.FAT_PER_KG;
-
-  const remainingCalories =
-    calories -
-    protein * NUTRITION.CAL_PROTEIN -
-    fat * NUTRITION.CAL_FAT;
-
-  const safeRemainingCalories = Math.max(0, remainingCalories);
-  const carbs = safeRemainingCalories / NUTRITION.CAL_CARBS;
-
-
   
   $("fat-value").textContent = round(fat);
-  $("carbs-value").textContent = round(carbs);
+  
 
   /* === Water === */
   const waterMl = weight * WATER.ML_PER_KG;
@@ -260,6 +250,16 @@ function calculateResults() {
     adjustedWaterMl += 800;
   }
   }
+  /* === Nutrition (adjusted carbs) === */
+const adjustedRemainingCalories =
+  adjustedCalories -
+  adjustedProtein * NUTRITION.CAL_PROTEIN -
+  fat * NUTRITION.CAL_FAT;
+
+const adjustedCarbs =
+  Math.max(0, adjustedRemainingCalories) / NUTRITION.CAL_CARBS;
+
+  $("carbs-value").textContent = round(adjustedCarbs);
   $("calories-value").textContent = round(adjustedCalories);
   $("protein-value").textContent = round(adjustedProtein);
 
@@ -278,7 +278,7 @@ function calculateResults() {
   bodyFat: round(bodyFat),
   calories: round(adjustedCalories),
   protein: round(adjustedProtein),
-  carbs: round(carbs),
+  carbs: round(adjustedCarbs),
   fat: round(fat),
   waterLiters: round(adjustedWaterMl / 1000, 1),
   };

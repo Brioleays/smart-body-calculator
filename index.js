@@ -57,9 +57,7 @@ function initUIControls() {
      AI Meal Plan UI (Scoped)
   ========================== */
   const aiSection = document.getElementById("ai-meal-plan");
-  const createMealBtn = aiSection.querySelector(
-    "button:not(#cancel-meal-plan)"
-  );
+  const createMealBtn = document.getElementById("start-meal-plan");
   const emailContainer = document.getElementById("email-container");
   const mealTypeSelect = document.getElementById("meal-type");
   const cancelMealBtn = aiSection.querySelector("#cancel-meal-plan");
@@ -68,14 +66,19 @@ function initUIControls() {
   mealInputSection.classList.add("hidden");
 
   createMealBtn.addEventListener("click", () => {
-    mealInputSection.classList.remove("hidden");
-    emailContainer.classList.remove("hidden");
-    createMealBtn.disabled = true;
-    mealTypeSelect.disabled = true;
-    createMealBtn.classList.add("opacity-50", "cursor-not-allowed");
-
-    cancelMealBtn.classList.remove("hidden");
+   if(!window.smartBodyData){
+    alert("يرجى حساب بيانات الجسم أولاً");
+    return;
+   }
+  mealInputSection.classList.remove("hidden"); 
+  emailContainer.classList.remove("hidden"); 
+  mealTypeSelect.disabled = false;
+  createMealBtn.disabled = true;
+  createMealBtn.classList.add("opacity-50", "cursor-not-allowed");
+  cancelMealBtn.classList.remove("hidden");
   });
+
+
 
 
   cancelMealBtn.addEventListener("click", () => {
