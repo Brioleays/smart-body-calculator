@@ -1,17 +1,23 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-Deno.serve(async (req) => {
+serve(async (req) => {
   try {
     if (req.method !== "POST") {
-      return new Response("Method Not Allowed", { status: 405 });
+      return new Response(
+        JSON.stringify({ success: false, error: "Invalid method" }),
+        { status: 405 }
+      );
     }
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+
     if (!OPENAI_API_KEY) {
-      return new Response("OpenAI key missing", { status: 500 });
+      return new Response(
+        JSON.stringify({ success: false, error: "Missing OpenAI key" }),
+        { status: 500 }
+      );
     }
 
-    // 1️⃣ Read data from frontend
     const {
       email,
       mealType,
@@ -24,77 +30,86 @@ Deno.serve(async (req) => {
 
     if (!email || !mealType || !calories) {
       return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
+        JSON.stringify({ success: false, error: "Missing fields" }),
         { status: 400 }
       );
     }
 
-    // 2️⃣ Arabic AI prompt (high quality, reusable)
+    /* =========================
+       PROMPT (Arabic, clean)
+    ========================== */
     const prompt = `
-أنت أخصائي تغذية محترف.
+أنت خبير تغذية.
 أنشئ خطة وجبات يومية باللغة العربية فقط.
 
 المعلومات:
-- الجنس: ${gender}
-- السعرات اليومية: ${calories} سعرة
-- البروتين: ${protein} جرام
-- الكربوهيدرات: ${carbs} جرام
-- الدهون: ${fat} جرام
-- نوع الخطة: ${mealType}
+- النوع: ${gender}
+- السعرات اليومية: ${calories}
+- البروتين: ${protein}g
+- الكربوهيدرات: ${carbs}g
+- الدهون: ${fat}g
+- نوع النظام: ${mealType}
 
-المطلوب:
-- فطور
-- غداء
-- عشاء
-- وجبتين خفيفتين
-- كميات واضحة
-- أطعمة عربية أو شائعة
-- لا تذكر أي تحذيرات طبية
+قسّم الخطة إلى:
+فطور
+غداء
+عشاء
+وجبات خفيفة
+
+استخدم أطعمة بسيطة ومتوفرة.
+لا تضف أي شرح خارج الخطة.
 `;
 
-    // 3️⃣ Call OpenAI
-    const openAIResponse = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${OPENAI_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: "أنت مساعد تغذية ذكي" },
-            { role: "user", content: prompt }
-          ],
-          temperature: 0.7
-        })
-      }
-    );
+    /* =========================
+       OpenAI Call
+    ========================== */
+    const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "أنت مساعد غذائي محترف." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.6
+      })
+    });
 
-    const aiData = await openAIResponse.json();
+    const aiData = await aiRes.json();
 
-    if (!aiData.choices?.length) {
-      throw new Error("Invalid AI response");
+    if (!aiRes.ok) {
+      console.error(aiData);
+      throw new Error("OpenAI request failed");
     }
 
-    const mealPlan = aiData.choices[0].message.content;
+    const mealPlan =
+      aiData.choices?.[0]?.message?.content || "تعذر إنشاء الخطة";
 
-    // 4️⃣ Return to frontend
+    /* =========================
+       SUCCESS RESPONSE
+    ========================== */
     return new Response(
       JSON.stringify({
         success: true,
         mealPlan
       }),
       {
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        status: 200
       }
     );
 
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return new Response(
-      JSON.stringify({ error: "AI generation failed" }),
+      JSON.stringify({
+        success: false,
+        error: "Internal server error"
+      }),
       { status: 500 }
     );
   }
