@@ -16,19 +16,19 @@ function generateSummary() {
 }
 
 async function generateMealPlan() {
-  const btn = document.getElementById("generate-meal-btn");
-  btn.disabled = true;
-  try{
-  if (!window.smartBodyData) {
-  alert("يرجى حساب النتائج أولاً");
-  return;
+  const data = window.smartBodyData;
+  if (!data) {
+    alert("يرجى حساب النتائج أولاً");
+    return;
   }
-
 
   const mealType = document.getElementById("meal-type").value;
   const email = document.getElementById("user-email").value;
-  const data = window.smartBodyData;
-  
+
+  if (!mealType) {
+    alert("يرجى اختيار نوع الوجبة");
+    return;
+  }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
@@ -36,71 +36,40 @@ async function generateMealPlan() {
     return;
   }
 
+  try {
+    const res = await fetch(
+      "https://dautyurfgvyenuegcjps.supabase.co/functions/v1/generate-meal-plan",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          mealType,
+          calories: data.calories,
+          protein: data.protein,
+          carbs: data.carbs,
+          fat: data.fat,
+          gender: data.gender
+        })
+      }
+    );
 
+    const result = await res.json();
 
-  if (!mealType || !data) {
-    alert("يرجى اختيار نوع الوجبة");
-    return;
-  }
-
-  // 🔹 Save to Supabase
-  const { error } = await window.supabaseClient.from("meal_plan_requests").insert([
-    {
-      email,
-      meal_type: mealType,
-      gender: data.gender,
-      age: data.age,
-      bmi: data.bmi,
-      calories: data.calories,
-      protein: data.protein,
-      carbs: data.carbs,
-      fat: data.fat
+    if (!res.ok || !result.success) {
+      throw new Error("AI generation failed");
     }
-  ]);
 
-  if (error) {
-    alert("حدث خطأ أثناء حفظ البيانات");
-    console.error(error);
-    return;
-  }}finally{
-    btn.disabled = false;
-  }
-  console.log("INSERTING:", {
-  email,
-  mealType,
-  data
-});
+    // Show AI meal plan in textarea
+    document.querySelector("#mealinput textarea").value =
+      result.mealPlan;
 
-  // 🔹 Generate meal plan (temporary static logic)
-  generateLocalMealPlan(mealType);
-}
-
-function generateLocalMealPlan(mealType) {
-  let plan = "";
-
-  switch (mealType) {
-    case "balanced":
-      plan = `فطور: بيض + خبز أسمر + فاكهة
-غداء: أرز + دجاج مشوي + خضار
-عشاء: زبادي + مكسرات`;
-      break;
-
-    case "high_protein":
-      plan = `فطور: بيض + زبادي يوناني
-غداء: صدر دجاج + خضار
-عشاء: تونة`;
-      break;
-
-    // others unchanged
+  } catch (err) {
+    console.error(err);
+    alert("حدث خطأ أثناء إنشاء خطة الوجبات");
   }
 
-  document.querySelector("#mealinput textarea").value = plan;
 }
 
-
-document.addEventListener("DOMContentLoaded", () => {
-  const mealTypeSelect = document.getElementById("meal-type");
-
-  if (!mealTypeSelect) return;
-
-});
