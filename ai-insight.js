@@ -17,18 +17,26 @@ function generateSummary() {
 
 async function generateMealPlan() {
   const data = window.smartBodyData;
+
   if (!data) {
     alert("يرجى حساب النتائج أولاً");
     return;
   }
 
-  const mealType = document.getElementById("meal-type").value;
-  const email = document.getElementById("user-email").value;
+  const mealType = document.getElementById("meal-type")?.value;
+  const emailInput = document.getElementById("user-email");
 
   if (!mealType) {
     alert("يرجى اختيار نوع الوجبة");
     return;
   }
+
+  if (!emailInput || !emailInput.value) {
+    alert("يرجى إدخال البريد الإلكتروني");
+    return;
+  }
+
+  const email = emailInput.value.trim();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
@@ -45,12 +53,12 @@ async function generateMealPlan() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          email,
-          mealType,
-          calories: data.calories,
-          protein: data.protein,
-          carbs: data.carbs,
-          fat: data.fat,
+          email: email,
+          mealType: mealType,
+          calories: Number(data.calories),
+          protein: Number(data.protein),
+          carbs: Number(data.carbs),
+          fat: Number(data.fat),
           gender: data.gender
         })
       }
@@ -59,10 +67,10 @@ async function generateMealPlan() {
     const result = await res.json();
 
     if (!res.ok || !result.success) {
+      console.error(result);
       throw new Error("AI generation failed");
     }
 
-    // Show AI meal plan in textarea
     document.querySelector("#mealinput textarea").value =
       result.mealPlan;
 
@@ -70,6 +78,4 @@ async function generateMealPlan() {
     console.error(err);
     alert("حدث خطأ أثناء إنشاء خطة الوجبات");
   }
-
 }
-
