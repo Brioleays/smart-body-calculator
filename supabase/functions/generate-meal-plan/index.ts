@@ -1,20 +1,35 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
-serve(async (req) => {
+Deno.serve(async (req) => {
+  // ✅ Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
   try {
     if (req.method !== "POST") {
       return new Response(
         JSON.stringify({ success: false, error: "Invalid method" }),
-        { status: 405 }
+        {
+          headers: corsHeaders,
+          status: 405,
+        }
       );
     }
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-
     if (!OPENAI_API_KEY) {
       return new Response(
         JSON.stringify({ success: false, error: "Missing OpenAI key" }),
-        { status: 500 }
+        {
+          headers: corsHeaders,
+          status: 500,
+        }
       );
     }
 
@@ -25,18 +40,21 @@ serve(async (req) => {
       protein,
       carbs,
       fat,
-      gender
+      gender,
     } = await req.json();
 
     if (!email || !mealType || !calories) {
       return new Response(
         JSON.stringify({ success: false, error: "Missing fields" }),
-        { status: 400 }
+        {
+          headers: corsHeaders,
+          status: 400,
+        }
       );
     }
 
     /* =========================
-       PROMPT (Arabic, clean)
+       Arabic AI Prompt
     ========================== */
     const prompt = `
 أنت خبير تغذية.
@@ -66,17 +84,17 @@ serve(async (req) => {
     const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
           { role: "system", content: "أنت مساعد غذائي محترف." },
-          { role: "user", content: prompt }
+          { role: "user", content: prompt },
         ],
-        temperature: 0.6
-      })
+        temperature: 0.6,
+      }),
     });
 
     const aiData = await aiRes.json();
@@ -90,27 +108,35 @@ serve(async (req) => {
       aiData.choices?.[0]?.message?.content || "تعذر إنشاء الخطة";
 
     /* =========================
-       SUCCESS RESPONSE
+       Success Response
     ========================== */
     return new Response(
       JSON.stringify({
         success: true,
-        mealPlan
+        mealPlan,
       }),
       {
-        headers: { "Content-Type": "application/json" },
-        status: 200
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+        status: 200,
       }
     );
-
   } catch (error) {
     console.error(error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: "Internal server error"
+        error: "Internal server error",
       }),
-      { status: 500 }
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+        status: 500,
+      }
     );
   }
 });
