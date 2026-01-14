@@ -45,24 +45,29 @@ async function generateMealPlan() {
   }
 
   try {
+    const SUPABASE_ANON_KEY = "sb_publishable_1wsugr9SntYndCpXUJlGMQ_hq-DdUeI";
+
     const res = await fetch(
       "https://dautyurfgvyenuegcjps.supabase.co/functions/v1/generate-meal-plan",
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
         },
         body: JSON.stringify({
-          email: email,
-          mealType: mealType,
-          calories: Number(data.calories),
-          protein: Number(data.protein),
-          carbs: Number(data.carbs),
-          fat: Number(data.fat),
+          email,
+          mealType,
+          calories: data.calories,
+          protein: data.protein,
+          carbs: data.carbs,
+          fat: data.fat,
           gender: data.gender
         })
       }
     );
+
 
     const result = await res.json();
 
