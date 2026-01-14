@@ -23,7 +23,7 @@ async function generateMealPlan() {
     return;
   }
 
-  const mealType = document.getElementById("meal-type")?.value;
+  const mealType = document.getElementById("meal-type")?.value?.trim();
   const emailInput = document.getElementById("user-email");
 
   if (!mealType) {
@@ -71,7 +71,7 @@ async function generateMealPlan() {
       throw new Error("AI generation failed");
     }
 
-    document.querySelector("#mealinput textarea").value =
+    document.querySelector("#meal-plan-output").value =
       result.mealPlan;
 
   } catch (err) {
