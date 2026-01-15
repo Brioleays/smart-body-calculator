@@ -75,7 +75,7 @@
               <div id="ageContainer" class="bg-card shadow-sm py-4 px-2 rounded-lg">
                 <label for="age" class="flex justify-between ">
                 
-                    <img src="./assets/ageicon.svg" alt="user's age"> 
+                    <img src="./assets/ageicon.svg" class="info-icon cursor-pointer" data-info="age" alt="user's age"> 
                     <span>العمر</span>
                     <img src="./assets/info.svg" alt="info" cursor="pointer">
                 </label>
@@ -86,7 +86,7 @@
                 
                     <img src="./assets/weighticon.svg" alt="user's weight"> 
                     <span> وزن </span>
-                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                    <img src="./assets/info.svg" class="info-icon cursor-pointer" data-info="weight" alt="info" cursor="pointer">
                 </label>
                 <div class="flex justify-center items-end gap-2 mt-2">
                   <span class="text-primary">Kg</span>
@@ -101,7 +101,7 @@
                 
                     <img src="./assets/heighticon.svg" alt="user's height"> 
                     <span> الارتفاع </span>
-                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                    <img src="./assets/info.svg" alt="info" data-info="height" class="info-icon"  cursor="pointer">
                 </label>
                 <div class="flex justify-center items-end gap-2 mt-2">
                   <span class="text-primary">cm</span>
@@ -114,7 +114,7 @@
             <label for="activity-level" class="flex justify-between mt-4 w-1/2">
               <img src="./assets/activity-Level.svg" alt="user's activity level"> 
               <span> مستوى النشاط </span>
-              <img src="./assets/info.svg" alt="info" cursor="pointer">
+              <img src="./assets/info.svg" data-info="activity" class="info-icon" alt="info" cursor="pointer">
             </label>
             <select id="activity-level" class="mt-4 block w-full bg-card rounded-2xl border border-gray-300  py-2 px-3 pl-3 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm">
               <option value="" disabled selected>اختر مستوى النشاط</option>
@@ -145,7 +145,7 @@
             <label for="status" class="flex justify-between mt-4 w-1/2">
                
               <span> الحالة </span>
-              <img src="./assets/info.svg" alt="info" cursor="pointer">
+              <img src="./assets/info.svg" alt="info" data-info="status" class="info-icon" cursor="pointer">
             </label>
             <select id="status" class="mt-4 block w-full bg-card rounded-2xl border border-gray-300  py-2 px-3 pl-3 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm">
               <option value="none" > لا شيء </option>
@@ -171,14 +171,14 @@
               <span class=" font-medium ">
                 قياسات الجسم المتقدمة (اختياري)
               </span>
-              <img src="./assets/info.svg" alt="info">
+              <img src="./assets/info.svg" class="info-icon cursor-pointer" data-info="advancedMeasurements" alt="info">
             </label>
             <div id="advanced-measurements" class="mt-2 grid grid-cols-3 gap-4">
               <div id="neck-container" class="" >
                 <label for="neck" class="flex justify-between mt-4 w-full">
                 
                     <span> رقبة </span>
-                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                    <img src="./assets/info.svg" data-info="neck" class="info-icon" alt="info" cursor="pointer">
                 </label>
                 <div class="flex justify-center items-end gap-2 mt-1">
                   <span class="text-primary">cm</span>
@@ -190,7 +190,7 @@
                 <label for="hip" class="flex justify-between mt-4 w-full">
                 
                     <span> ورك </span>
-                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                    <img src="./assets/info.svg" data-info="hips" class="info-icon" alt="info" cursor="pointer">
                 </label>
                 <div class="flex justify-center items-end gap-2 mt-1">
                   <span class="text-primary">cm</span>
@@ -202,7 +202,7 @@
                 <label for="waist" class="flex justify-between mt-4 w-full">
                 
                     <span> خصر </span>
-                    <img src="./assets/info.svg" alt="info" cursor="pointer">
+                    <img src="./assets/info.svg" data-info="waist" class="info-icon" alt="info" cursor="pointer">
                 </label>
                 <div class="flex justify-center items-end gap-2 mt-1">
                   <span class="text-primary">cm</span>
@@ -243,7 +243,7 @@
               <img src="./assets/iwricon.svg" class="w-6" alt="iwr icon">
             </div>
             <p id="iwr-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="idealWeightRange" class="info-icon cursor-pointer" alt="info">
           </div>
           <div id="muscle-mass-estimate" class="flex items-center justify-between">
             <div id="mme-label" class="flex items-center gap-2">
@@ -252,7 +252,7 @@
               <img src="./assets/mmeicon.svg" class="w-6" alt="mme icon">
             </div>
             <p id="mme-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="muscleMassEstimate" class="info-icon cursor-pointer" alt="info">
           </div>
           <div id="bmi" class="flex justify-between items-center">
             <div id="bmi-label" class="flex items-center gap-1">
@@ -261,7 +261,7 @@
             </div>
             <p id="bmi-value" class="text-xl text-semibold">N/A</p>
             <p id="bmi-vtowords" class="text-primary">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="bmi" class="info-icon cursor-pointer" alt="info">
           </div>
           
           <div id="fat-choice">
@@ -272,7 +272,7 @@
               <img src="./assets/basicfaticon.svg" class="w-6" alt="bfc icon">
             </div>
             <p id="basic-fc-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="basicFat" class="info-icon cursor-pointer" alt="info">
             </div>
             <div id="advancedfc" class=" hidden flex justify-between items-center">
             <div id="advancedfc-label" class="flex items-center gap-2">
@@ -281,7 +281,7 @@
               <img src="./assets/advancedfaticon.svg" class="w-6" alt="afc icon">
             </div>
             <p id="advanced-fc-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="advancedFat" class="info-icon cursor-pointer" alt="info">
           </div>
           </div>
         </div>
@@ -300,7 +300,7 @@
               <img src="./assets/carbsicon.svg" class="w-6" alt="carbs icon">
             </div>
             <p id="carbs-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="carbs" class="info-icon cursor-pointer" alt="info">
           </div>
           <div id="protein" class="flex items-center justify-between">
             <div id="protein-label" class="flex items-center gap-2">
@@ -309,7 +309,7 @@
               <img src="./assets/proteinicon.svg" class="w-6" alt="mme icon">
             </div>
             <p id="protein-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="protein" class="info-icon cursor-pointer" alt="info">
           </div>
           <div id="fat" class=" flex justify-between items-center">
             <div id="fat-label" class="flex items-center gap-2">
@@ -318,7 +318,7 @@
               <img src="./assets/faticon.svg" class="w-6" alt="fat icon">
             </div>
             <p id="fat-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="fat" class="info-icon cursor-pointer"  alt="info">
           </div>
           <div id="water" class="flex justify-between items-center">
             <div id="water-label" class="flex items-center gap-2">
@@ -330,7 +330,7 @@
               <img src="./assets/watericon.svg" class="w-6" alt="water icon">
             </div>
             <p id="water-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="water" class="info-icon cursor-pointer" alt="info">
           </div>
           <div id="calories" class=" flex justify-between items-center">
             <div id="calories-label" class="flex items-center ">
@@ -339,7 +339,7 @@
               <img src="./assets/caloriesicon.svg" class="w-6" alt="calories icon">
             </div>
             <p id="calories-value" class="text-xl text-semibold">N/A</p>
-            <img src="./assets/info.svg" alt="info">
+            <img src="./assets/info.svg" data-info="calories" class="info-icon  cursor-pointer" alt="info">
           </div>
         </div>
       </div>
@@ -390,7 +390,7 @@
               <label for="meal-type" class="flex justify-between mt-4 w-1/2">
                 <img src="./assets/mealtypeicon.svg" alt="meal type icon">
                 <span> نوع الوجبة </span>
-                <img src="./assets/info.svg" alt="info" cursor="pointer">
+                <img src="./assets/info.svg" data-info="mealType" class="info-icon" alt="info" cursor="pointer">
               </label>
               <select id="meal-type" class="mt-4 block w-full bg-card rounded-2xl border border-gray-300  py-2 px-3 pl-3 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm" disabled>
                   <option value="" disabled selected>اختر نوع الوجبة</option>
@@ -448,10 +448,9 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./index.js"></script>
+  <script src="./config/info-handler.js"></script>
   <script src="./supabase.js"></script>
   <script src="./calculation.js"></script>
-  
   <script src="./ai-insight.js"></script>
-
 </body>
 </html>

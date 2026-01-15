@@ -6,7 +6,6 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -31,7 +30,7 @@ Deno.serve(async (req) => {
       protein,
       carbs,
       fat,
-      gender,
+      gender
     } = await req.json();
 
     if (!email || !mealType || !calories) {
@@ -45,9 +44,8 @@ Deno.serve(async (req) => {
 أنت خبير تغذية.
 أنشئ خطة وجبات يومية باللغة العربية فقط.
 
-المعلومات:
 - النوع: ${gender}
-- السعرات اليومية: ${calories}
+- السعرات: ${calories}
 - البروتين: ${protein}g
 - الكربوهيدرات: ${carbs}g
 - الدهون: ${fat}g
@@ -58,59 +56,57 @@ Deno.serve(async (req) => {
 غداء
 عشاء
 وجبات خفيفة
-
-لا تضف أي شرح خارج الخطة.
 `;
 
-    const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        messages: [
-          { role: "system", content: "أنت مساعد غذائي محترف." },
-          { role: "user", content: prompt },
-        ],
-        temperature: 0.6,
-        max_tokens: 700,
-      }),
-    });
+    const aiRes = await fetch(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "gpt-4.1-mini",
+          messages: [
+            { role: "system", content: "أنت مساعد غذائي محترف." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.6
+        })
+      }
+    );
 
     const aiData = await aiRes.json();
-
     if (!aiRes.ok) {
-      console.error(aiData);
-      throw new Error("OpenAI request failed");
+      throw new Error(aiData.error?.message || "OpenAI request failed");
     }
 
-    const mealPlan =
-      aiData.choices?.[0]?.message?.content || "تعذر إنشاء الخطة";
-
     return new Response(
-      JSON.stringify({ success: true, mealPlan }),
+      JSON.stringify({
+        success: true,
+        mealPlan: aiData.choices[0].message.content
+      }),
       {
         headers: {
           ...corsHeaders,
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
+
   } catch (err) {
     console.error("EDGE FUNCTION ERROR:", err);
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: err.message ?? "Unknown error",
+        error: err.message
       }),
       {
         status: 500,
-        headers: corsHeaders,
+        headers: corsHeaders
       }
     );
   }
 });
-

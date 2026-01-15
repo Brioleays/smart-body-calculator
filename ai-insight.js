@@ -72,7 +72,7 @@ async function generateMealPlan() {
     const result = await res.json();
 
     if (!res.ok || !result.success) {
-      console.error(result);
+      // console.error(result);
       throw new Error("AI generation failed");
     }
 
