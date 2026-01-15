@@ -6,6 +6,7 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -30,7 +31,7 @@ Deno.serve(async (req) => {
       protein,
       carbs,
       fat,
-      gender
+      gender,
     } = await req.json();
 
     if (!email || !mealType || !calories) {
@@ -65,34 +66,51 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-mini",
         messages: [
           { role: "system", content: "أنت مساعد غذائي محترف." },
-          { role: "user", content: prompt }
+          { role: "user", content: prompt },
         ],
-        temperature: 0.6
-      })
+        temperature: 0.6,
+        max_tokens: 700,
+      }),
     });
 
     const aiData = await aiRes.json();
-    if (!aiRes.ok) throw new Error("OpenAI failed");
+
+    if (!aiRes.ok) {
+      console.error(aiData);
+      throw new Error("OpenAI request failed");
+    }
 
     const mealPlan =
       aiData.choices?.[0]?.message?.content || "تعذر إنشاء الخطة";
 
     return new Response(
       JSON.stringify({ success: true, mealPlan }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+      }
     );
-
   } catch (err) {
-    console.error(err);
+    console.error("EDGE FUNCTION ERROR:", err);
+
     return new Response(
-      JSON.stringify({ success: false, error: err.message }),
-      { status: 500, headers: corsHeaders }
+      JSON.stringify({
+        success: false,
+        error: err.message ?? "Unknown error",
+      }),
+      {
+        status: 500,
+        headers: corsHeaders,
+      }
     );
   }
 });
+
