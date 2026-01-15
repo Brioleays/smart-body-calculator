@@ -45,7 +45,7 @@ async function generateMealPlan() {
   }
 
   try {
-    const SUPABASE_ANON_KEY = "sb_publishable_1wsugr9SntYndCpXUJlGMQ_hq-DdUeI";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhdXR5dXJmZ3Z5ZW51ZWdjanBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyODcxMzQsImV4cCI6MjA4Mzg2MzEzNH0.ognRXs_4uEUaxDfSJFTRAcRipowQ9fVxiEXEQpaOGkI";
 
     const res = await fetch(
       "https://dautyurfgvyenuegcjps.supabase.co/functions/v1/generate-meal-plan",

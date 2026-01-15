@@ -6,7 +6,6 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  // ✅ Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -15,22 +14,13 @@ Deno.serve(async (req) => {
     if (req.method !== "POST") {
       return new Response(
         JSON.stringify({ success: false, error: "Invalid method" }),
-        {
-          headers: corsHeaders,
-          status: 405,
-        }
+        { status: 405, headers: corsHeaders }
       );
     }
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
-      return new Response(
-        JSON.stringify({ success: false, error: "Missing OpenAI key" }),
-        {
-          headers: corsHeaders,
-          status: 500,
-        }
-      );
+      throw new Error("Missing OpenAI API key");
     }
 
     const {
@@ -40,22 +30,16 @@ Deno.serve(async (req) => {
       protein,
       carbs,
       fat,
-      gender,
+      gender
     } = await req.json();
 
     if (!email || !mealType || !calories) {
       return new Response(
         JSON.stringify({ success: false, error: "Missing fields" }),
-        {
-          headers: corsHeaders,
-          status: 400,
-        }
+        { status: 400, headers: corsHeaders }
       );
     }
 
-    /* =========================
-       Arabic AI Prompt
-    ========================== */
     const prompt = `
 أنت خبير تغذية.
 أنشئ خطة وجبات يومية باللغة العربية فقط.
@@ -74,69 +58,41 @@ Deno.serve(async (req) => {
 عشاء
 وجبات خفيفة
 
-استخدم أطعمة بسيطة ومتوفرة.
 لا تضف أي شرح خارج الخطة.
 `;
 
-    /* =========================
-       OpenAI Call
-    ========================== */
     const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
           { role: "system", content: "أنت مساعد غذائي محترف." },
-          { role: "user", content: prompt },
+          { role: "user", content: prompt }
         ],
-        temperature: 0.6,
-      }),
+        temperature: 0.6
+      })
     });
 
     const aiData = await aiRes.json();
-
-    if (!aiRes.ok) {
-      console.error(aiData);
-      throw new Error("OpenAI request failed");
-    }
+    if (!aiRes.ok) throw new Error("OpenAI failed");
 
     const mealPlan =
       aiData.choices?.[0]?.message?.content || "تعذر إنشاء الخطة";
 
-    /* =========================
-       Success Response
-    ========================== */
     return new Response(
-      JSON.stringify({
-        success: true,
-        mealPlan,
-      }),
-      {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-        status: 200,
-      }
+      JSON.stringify({ success: true, mealPlan }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (error) {
-    console.error(error);
+
+  } catch (err) {
+    console.error(err);
     return new Response(
-      JSON.stringify({
-        success: false,
-        error: "Internal server error",
-      }),
-      {
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-        status: 500,
-      }
+      JSON.stringify({ success: false, error: err.message }),
+      { status: 500, headers: corsHeaders }
     );
   }
 });
